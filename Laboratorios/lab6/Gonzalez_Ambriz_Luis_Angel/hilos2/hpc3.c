@@ -67,7 +67,6 @@ int main(){
         }
 
         proceso_padre( pipefd );
-
         imprimirArreglo(C);
 		free(A);
 		free(B);
@@ -105,16 +104,17 @@ void proceso_padre( int pipefd[NUM_PROC][2] ){
         printf("Proceso padre con pid %d\n", getpid());
 		
         for( np = 0; np < NUM_PROC; np++){
-          close( pipefd[np][1]);
+          
           pid_hijo = wait( &npc );
           npc=npc>>8;
+          close( pipefd[npc][1]);
           iniBloque=npc*tambloque;
-          read(pipefd[np][0],C+iniBloque,sizeof(int)*tambloque);
+          read(pipefd[npc][0],C+iniBloque,sizeof(int)*tambloque);
           printf("Procose hijo %d terminado con pid %d\n",npc,pid_hijo );
         	
 
      	
-	close( pipefd[np][0]);    
+	close( pipefd[npc][0]);    
 		
 	}
 }
