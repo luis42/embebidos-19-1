@@ -5,8 +5,5 @@
 #define MUESTRAS 512
 
 
-float *A, *B, *C;
-float seno[MUESTRAS];
-float hamming[MUESTRAS];
 
 #endif

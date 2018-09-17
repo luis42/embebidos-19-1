@@ -10,6 +10,8 @@
 #include "defs.h"
 #include "procesamiento.h"
 #include "datos.h"
+extern float *A, *B, *C;
+
 
 void proceso_hijo( int np, int pipefd[] ){
 

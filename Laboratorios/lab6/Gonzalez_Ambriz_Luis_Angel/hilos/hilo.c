@@ -10,7 +10,7 @@
 #include "defs.h"
 #include "procesamiento.h"
 #include "datos.h"
-
+extern float *A, *B, *C;
 void * funHilo( void *idh ){
 	int nh = *(int *)idh;
 	register int i;

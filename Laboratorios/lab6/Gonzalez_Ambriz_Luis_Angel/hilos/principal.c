@@ -7,9 +7,13 @@
 #include "hilo.h"
 #include "procesamiento.h"
 #include "defs.h"
+float *A, *B, *C;
 
+float seno[MUESTRAS];
+float hamming[MUESTRAS];
 
 int main(){
+
 
 	//Declaracion de variables
 	register int nh;

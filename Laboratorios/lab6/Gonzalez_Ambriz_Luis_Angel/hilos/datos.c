@@ -4,8 +4,11 @@
 #include <math.h>
 #include <unistd.h>
 #include <sys/wait.h>
-
 #include "defs.h"
+
+extern float seno[MUESTRAS];
+extern float hamming[MUESTRAS];
+
 
 float * reservarMemoria( void ){
 	float *mem;
@@ -45,7 +48,7 @@ void llenar_hamming(float hamming[]){
 	register int n;
 
 	for(n = 0; n < MUESTRAS; n++){
-		hamming[n] = 0.54-(0.46*cosf(2*n*M_PI/(MUESTRAS-1)));
+		hamming[n] = 0.53836-(0.46164*cosf(2*n*M_PI/(MUESTRAS-1)));
 	}
 }
 

@@ -1,0 +1,15 @@
+set multiplot
+set size 1, 3
+
+set origin 1,1
+plot("seno.dat") w l
+
+
+set origin 1,2
+plot("hamming.dat") w l
+
+
+set origin 1,3
+plot("sample.dat") w l
+pause mouse
+unset multiplot
