@@ -9,18 +9,13 @@ set multiplot layout 2,2 columnsfirst title "{/:Bold=15 Embebidos}" \
 
 set format y "%.1f"
 set key box opaque
-set ylabel 'ylabel'
 set xrange [0:600]
 
+
 plot ("seno.dat") lt 1 w l
-set xlabel 'xlabel'
 plot ("sample.dat") lt 2 w l
 
-unset ylabel
-unset ytics
-
-unset xlabel
-plot ("hamming.dat") lt 3 w l
+plot ("hamming.dat") lt 4 w l
 set xlabel 'xlabel'
 pause mouse
 unset multiplot
