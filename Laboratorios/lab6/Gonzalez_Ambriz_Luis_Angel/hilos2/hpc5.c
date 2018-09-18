@@ -1,96 +1,155 @@
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
+#include <sys/types.h>
 #include <unistd.h>
-#define NUM_HILOS 4
-#define N 64 //Con números grandes hay problemas con la sinconía pero 
+#include <sys/wait.h>
+#define NUM_PROC 4
+#define N 32 //Con números grandes hay problemas con la sinconía pero 
 
 //programa para crear muchos hilos
-int *A,*B,*C;
-
+int *A;
+int promedio;
 int * reservarMemoria();
 void llenarArreglo(int *datos);
 void imprimirArreglo(int *datos);
-void * funHilo(void *arg);
+
+void proceso_hijo( int np, int pipefd[] );
+void proceso_padre( int pipefd[NUM_PROC][2]);
+//void * funHilo(void *arg);
 //pthread_mutex_t bloqueo;
 
 //int contador;
 
 int main(){
-	int nhs[NUM_HILOS], *res;
-	register int nh;
-	pthread_t tids[NUM_HILOS];
+	
+	pid_t pid;
+	int np;
+	int pipefd[NUM_PROC][2],edo_pipe;
 
 	A=reservarMemoria();
 	llenarArreglo(A);
 	imprimirArreglo(A);
 
-
-	B=reservarMemoria();
-	llenarArreglo(B);
-	imprimirArreglo(B);
-	C=reservarMemoria();
 	//contador = 0;
 
 	//Se agregó para tener exclusión mutua; Se inicializa en el proceso padre una vez
 	//pthread_mutex_init(&bloqueo, NULL);
 	
-	printf("Probando hilos...\n");
-
-/*
+	printf("Probando procesos...\n");
+	promedio=0;
+/*	
 	datos = reservarMemoria();
 	llenarArreglo(datos);
 	imprimirArreglo(datos);
-*/
-	for (nh = 0; nh < NUM_HILOS; nh++)
-	{
-		nhs[nh] = nh;
-		pthread_create(&tids[nh], NULL, funHilo, (void *)&nhs[nh]);
-	}
+*/	for( np = 0; np < NUM_PROC; np++){
+		edo_pipe = pipe(&pipefd[np][0]);
+
+		if( edo_pipe == -1 ){
+			perror("Error al crear el pipe\n");
+			exit(EXIT_FAILURE);
+		}
+
+                pid = fork();
+
+                if( pid == -1){
+                        perror("Error al crear el proceso hijo\n");
+                        exit(EXIT_FAILURE);
+                }
+
+                if( !pid ){
+                        proceso_hijo( np, &pipefd[np][0] );
+                }
+        }
+
+	printf("--->%d\n", promedio >> 1);
 	
-	for (nh = 0; nh < NUM_HILOS; nh++)
-	{
-		pthread_join(tids[nh], (void **)&res);
-		printf("Hilo %d terminado\n", *res);
-	}
-	imprimirArreglo(C);
 	free(A);
-	free(B);
-	free(C);
 	//pthread_mutex_destroy(&bloqueo);
 
 	return 0;
 }
+void proceso_hijo( int np, int pipefd[] ){
 
+	register int i;
 
-void * funHilo(void *arg){
-	register int i = 0;
-	int nh = *(int*) arg;
+	//Calculando el inicio y fin de cada bloque
+	int tamBloque = N / NUM_PROC;
+	int iniBloque = np * tamBloque;
+	int finBloque = iniBloque + tamBloque;
 
+	printf("Proceso hijo %d con pid %d  \n\n", np, getpid());
 
+	close( pipefd[0] );
 
-	printf("Iniciando hilo %d \n", nh);
-	for (i = nh; i < N; i+=NUM_HILOS)
-	{
-
-		C[i]=A[i]*B[i];
+	for( i = iniBloque; i < finBloque; i++){
+		promedio += A[i];
 	}
 
-
-
-	//Se agregó esto para crear una zona crítica y que los demás hilos no puedan acceder a ella mientras uno la esté ocupando
-	//pthread_mutex_lock(&bloqueo);
-	//contador++;	
-	
-	//while(--i); //Para que sea reentrante
-	//sleep(5);	//Es no reentrante
-	printf("Terminando hilo %d \n", nh);
-
-	//pthread_mutex_unlock(&bloqueo);
-
-	pthread_exit(arg);
+	write( pipefd[1], &promedio, sizeof(int) );
+	close(pipefd[1]);
+	exit( np );
 }
+
+void proceso_padre( int pipefd[NUM_PROC][2] ){
+	register int np;
+        int pid, proc,suma_parcial;
+
+	int tamBloque = N / NUM_PROC;
+	int iniBloque;
+
+        printf("Proceso padre con pid %d\n", getpid());
+        for( np = 0; np < NUM_PROC; np++){
+		close( pipefd[np][1] );
+		//Si no me importa el orden de los resultados no hay problema con un solo pipe
+		//Pero si si es necesario entonces se deben crear una tuberia para cada proceso
+
+        pid = wait( &proc );
+		proc = proc >> 8;
+
+		//iniBloque = proc * tamBloque;
+		read( pipefd[proc][0], suma_parcial, sizeof(int));
+		promedio+=suma_parcial;
+		printf("Proceso hijo %d, con pid %d\n\n", proc, pid);
+		close( pipefd[proc][0] );
+
+	}
+	printf("Promedio----->%d\n", promedio>>5);
+}
+
+// void * funHilo(void *arg){
+// 	register int i = 0;
+// 	int nh = *(int*) arg;
+// 	int suma_parcial=0;
+
+
+// 	printf("Iniciando hilo %d \n", nh);
+// 	for (i = nh; i < N; i+=NUM_HILOS)
+// 	{
+// 		//pthread_mutex_lock(&bloqueo);
+
+// 		suma_parcial +=A[i];
+
+// 		//pthread_mutex_unlock(&bloqueo);
+// 	}
+
+// 	pthread_mutex_lock(&bloqueo);
+// 	promedio+=suma_parcial;
+// 	pthread_mutex_unlock(&bloqueo);
+
+
+
+// 	//Se agregó esto para crear una zona crítica y que los demás hilos no puedan acceder a ella mientras uno la esté ocupando
+// 	//pthread_mutex_lock(&bloqueo);
+// 	//contador++;	
+	
+// 	//while(--i); //Para que sea reentrante
+// 	//sleep(5);	//Es no reentrante
+// 	printf("Terminando hilo %d \n", nh);
+
+// 	//pthread_mutex_unlock(&bloqueo);
+
+// 	pthread_exit(arg);
+// }
 
 // *Ap : Contenido de Ap
 //Con el cast se conoce los bytes que tiene que obtener a partir de la dirección de Ap

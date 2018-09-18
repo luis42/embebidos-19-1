@@ -1,19 +1,18 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
 #define NUM_HILOS 4
-#define N 64 //Con números grandes hay problemas con la sinconía pero 
+#define N 2 //Con números grandes hay problemas con la sinconía pero 
 
 //programa para crear muchos hilos
 int *A,*B,*C;
-
+int promedio;
 int * reservarMemoria();
 void llenarArreglo(int *datos);
 void imprimirArreglo(int *datos);
 void * funHilo(void *arg);
-//pthread_mutex_t bloqueo;
+pthread_mutex_t bloqueo;
 
 //int contador;
 
@@ -21,7 +20,8 @@ int main(){
 	int nhs[NUM_HILOS], *res;
 	register int nh;
 	pthread_t tids[NUM_HILOS];
-
+	pthread_mutex_init(&bloqueo,NULL);
+	promedio=0;
 	A=reservarMemoria();
 	llenarArreglo(A);
 	imprimirArreglo(A);
@@ -54,11 +54,12 @@ int main(){
 		pthread_join(tids[nh], (void **)&res);
 		printf("Hilo %d terminado\n", *res);
 	}
-	imprimirArreglo(C);
+	printf("--->%d\n", promedio >> 1);
+	
 	free(A);
 	free(B);
 	free(C);
-	//pthread_mutex_destroy(&bloqueo);
+	pthread_mutex_destroy(&bloqueo);
 
 	return 0;
 }
@@ -67,15 +68,22 @@ int main(){
 void * funHilo(void *arg){
 	register int i = 0;
 	int nh = *(int*) arg;
-
+	int suma_parcial=0;
 
 
 	printf("Iniciando hilo %d \n", nh);
 	for (i = nh; i < N; i+=NUM_HILOS)
 	{
+		//pthread_mutex_lock(&bloqueo);
 
-		C[i]=A[i]*B[i];
+		suma_parcial +=A[i];
+
+		//pthread_mutex_unlock(&bloqueo);
 	}
+
+	pthread_mutex_lock(&bloqueo);
+	promedio+=suma_parcial;
+	pthread_mutex_unlock(&bloqueo);
 
 
 
