@@ -16,7 +16,6 @@ void * funHilo( void *idh ){
 	register int i;
 	int sumaParcial = 0;
 
-	//Calculando el inicio y fin de cada bloque
 	int tamBloque = N / NUM_HILOS;
 	int iniBloque = nh * tamBloque;
 	int finBloque = iniBloque + tamBloque;

@@ -2,7 +2,7 @@
 #define DEFS_H
 
 #define NUM_PROC 4
-#define N 1
+#define N 32
 
 
 
