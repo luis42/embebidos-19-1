@@ -34,7 +34,7 @@ void imprimirArreglo( int datos[] ){
 void llenarArreglo( int datos[] ){
         register int n;
         for( n = 0; n < N; n++){
-                datos[n] = rand() % 2;
+                datos[n] = rand() % 4;
         }
 }
 

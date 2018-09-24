@@ -21,36 +21,33 @@ extern pthread_mutex_t bloqueo;
 void proceso_hijo( int np, int pipefd[] ){
 
 	register int i;
-
+	int producto=0;
 	printf("Proceso hijo %d con pid %d  \n\n", np, getpid());
 
 	close( pipefd[0] );
 
 	for( i = np; i < N; i+= NUM_PROC){
-		pp += A[i] * B[i];
+		producto += A[i] * B[i];
 	}
 
-	write( pipefd[1], &pp, sizeof(int) );
+	write( pipefd[1], &producto, sizeof(int) );
 	close(pipefd[1]);
 	exit( np );
 }
 
 void proceso_padre( int pipefd[] ){
 	register int np;
-        int pid, proc;
+    int pid, proc;
 	int sumaParcial;
-
-        printf("Proceso padre con pid %d\n", getpid());
+    printf("Proceso padre con pid %d\n", getpid());
 	close( pipefd[1] );
 
 	for( np = 0; np < NUM_PROC; np++){
 
-                pid = wait( &proc );
+        pid = wait( &proc );
 		proc = proc >> 8;
-
 		read( pipefd[0], &sumaParcial , sizeof(int) );
 		pp += sumaParcial;
-
 		printf("Proceso hijo %d terminado, con pid %d\n\n", proc, pid);
 
 	}
