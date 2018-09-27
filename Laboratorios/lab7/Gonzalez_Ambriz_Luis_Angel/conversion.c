@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "imagen.h"
+
 unsigned char * RGBtoGray(unsigned char *imagenRGB,uint32_t width,uint32_t height);
 void GraytoRGB(unsigned char *imagenGray,unsigned char *imagenRGB,uint32_t width,uint32_t height);
+void brilloImagen( unsigned char *imagenGray,uint32_t width,uint32_t height);
+
+
 int main()
 {
 	
@@ -10,12 +14,14 @@ int main()
 	bmpInfoHeader info;
 	unsigned char *imagenRGB,*imagenGray;
 
-	imagenRGB = abrirBMP("hoja.bmp",&info);
+	imagenRGB = abrirBMP("dark_forest3.bmp",&info);
 
 	displayInfo( &info);
 	imagenGray=RGBtoGray(imagenRGB ,info.width,info.height);
+	brilloImagen(imagenGray,info.width,info.height);
 	GraytoRGB(imagenGray , imagenRGB , info.width,info.height);
 	printf("Guardando\n");
+
 	guardarBMP("hojaGra2.bmp", &info , imagenRGB);
 	free(imagenRGB);
 	free(imagenGray);
@@ -24,6 +30,20 @@ int main()
 
 	return 0;
 }
+
+void brilloImagen( unsigned char *imagenGray,uint32_t width,uint32_t height)
+{
+	register int p;
+	unsigned short int pixel;
+	for (p = 0; p < width*height; p++)
+	{
+
+		pixel=imagenGray[p] + 80;
+		imagenGray[p] = (pixel > 255 )  ? 255 : (unsigned char)pixel;
+
+	}
+}
+
 
 
 unsigned char * RGBtoGray(unsigned char *imagenRGB,uint32_t width,uint32_t height)
