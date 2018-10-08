@@ -8,6 +8,8 @@ unsigned char * RGBtoGray(unsigned char *imagenRGB,uint32_t width,uint32_t heigh
 void GraytoRGB(unsigned char *imagenGray,unsigned char *imagenRGB,uint32_t width,uint32_t height);
 void brilloImagen( unsigned char *imagenGray,uint32_t width,uint32_t height);
 unsigned char * reservarMemoria(uint32_t width,uint32_t height);
+void filtroImagen(unsigned char * imagenGray,unsigned char * imagenFiltro,uint32_t width,uint32_t height);
+
 
 int main()
 {
@@ -16,18 +18,19 @@ int main()
 	bmpInfoHeader info;
 	unsigned char *imagenRGB,*imagenGray,*imagenFiltro;
 
-	imagenRGB = abrirBMP("dark_forest3.bmp",&info);
+	imagenRGB = abrirBMP("huella1.bmp",&info);
 
 	displayInfo( &info);
 	imagenGray=RGBtoGray(imagenRGB ,info.width,info.height);
 //	brilloImagen(imagenGray,info.width,info.height);
 	imagenFiltro=reservarMemoria(info.width,info.height);
-	filtroImagen(imagenGray,info.width,info.height);
+	filtroImagen(imagenGray,imagenFiltro,info.width,info.height);
 	
-	GraytoRGB(imagenGray , imagenFiltro , info.width , info.height );
+	GraytoRGB(imagenFiltro , imagenRGB , info.width , info.height );
 	printf("Guardando\n");
 
-	guardarBMP("hojaGra2.bmp", &info , imagenRGB);
+	guardarBMP("huella2.bmp", &info , imagenRGB);
+
 	free(imagenRGB);
 	free(imagenGray); 
 
@@ -48,20 +51,22 @@ void filtroImagen(unsigned char * imagenGray,unsigned char * imagenFiltro,uint32
 							1 ,1 ,1};
 	for (y = 0; y <= height-DIMASK ; y++)
 	{
-		for (y = 0; y <= height-DIMASK ; y++)
+		for (x = 0; x <= height-DIMASK ; x++)
 		{
 			conv=0;
 			indicem=0;
 			for (ym= 0; ym < DIMASK; ym++)
 			{
 
-				for (xm = 0; i < DIMASK; xm++)
+				for (xm = 0; xm < DIMASK; xm++)
 				{
 					indiceGray = ((y + ym) * width + (x + xm ));
 					conv+=imagenGray[indiceGray]*mascara[indicem++];
 
 				}
 				conv=conv/9;
+				indiceGray=((y+1)*width + (x+1));
+				imagenFiltro[indiceGray]=conv;
 				
 			}
 			
