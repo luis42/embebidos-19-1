@@ -46,6 +46,23 @@ void llenarArreglo( int *matriz )
 
 void sumaMatrices( int *A, int *B, int *C )
 {
+
+		register int x,y;
+		register int indice;
+		for (x = 0; x < WIDTH; x++)
+		{
+		for (y = 0; y < HEIGHT; y++)
+
+			
+			{
+				indice = (y*WIDTH + x);
+				C[indice]=A[indice] + B[indice];
+			/* code */ 
+			}
+			/* code */
+		}
+
+
 }
 
 int * reservarMemoria( void )

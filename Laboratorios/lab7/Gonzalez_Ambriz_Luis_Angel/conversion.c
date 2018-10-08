@@ -33,6 +33,7 @@ int main()
 
 	free(imagenRGB);
 	free(imagenGray); 
+	free(imagenFiltro);
 
 
 
@@ -46,9 +47,9 @@ void filtroImagen(unsigned char * imagenGray,unsigned char * imagenFiltro,uint32
 
 	int indiceGray,conv,indicem;
 	unsigned char mascara[]={
-							1 ,1 ,1,
-							1 ,1 ,1,
-							1 ,1 ,1};
+							-1,-1 ,-1,
+							-1 ,8 ,-1,
+							-1 ,-1 ,-1};
 	for (y = 0; y <= height-DIMASK ; y++)
 	{
 		for (x = 0; x <= height-DIMASK ; x++)
@@ -64,11 +65,12 @@ void filtroImagen(unsigned char * imagenGray,unsigned char * imagenFiltro,uint32
 					conv+=imagenGray[indiceGray]*mascara[indicem++];
 
 				}
+			}
 				conv=conv/9;
 				indiceGray=((y+1)*width + (x+1));
 				imagenFiltro[indiceGray]=conv;
 				
-			}
+			
 			
 		}
 	}
