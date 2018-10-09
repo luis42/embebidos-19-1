@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "imagen.h"
-#define DIMASK 3
+#define DIMASK 5
 
 
 unsigned char * RGBtoGray(unsigned char *imagenRGB,uint32_t width,uint32_t height);
@@ -18,7 +18,7 @@ int main()
 	bmpInfoHeader info;
 	unsigned char *imagenRGB,*imagenGray,*imagenFiltro;
 
-	imagenRGB = abrirBMP("huella1.bmp",&info);
+	imagenRGB = abrirBMP("calle1.bmp",&info);
 
 	displayInfo( &info);
 	imagenGray=RGBtoGray(imagenRGB ,info.width,info.height);
@@ -29,7 +29,7 @@ int main()
 	GraytoRGB(imagenFiltro , imagenRGB , info.width , info.height );
 	printf("Guardando\n");
 
-	guardarBMP("huella2.bmp", &info , imagenRGB);
+	guardarBMP("calle3.bmp", &info , imagenRGB);
 
 	free(imagenRGB);
 	free(imagenGray); 
@@ -47,9 +47,11 @@ void filtroImagen(unsigned char * imagenGray,unsigned char * imagenFiltro,uint32
 
 	int indiceGray,conv,indicem;
 	unsigned char mascara[]={
-							1,1 ,1,
-							1,1 ,1,
-							1,1 ,1};
+							1, 4, 7, 4, 1,
+							4,16,26,16, 4,
+							7,26,41,26, 7,
+							4,16,26,16, 4,
+							1, 4, 7, 4, 1};
 	for (y = 0; y <= height-DIMASK ; y++)
 	{
 		for (x = 0; x <= width-DIMASK ; x++)
@@ -66,7 +68,7 @@ void filtroImagen(unsigned char * imagenGray,unsigned char * imagenFiltro,uint32
 
 				}
 			}
-				conv=conv/9;
+				conv=conv/213;
 				indiceGray=((y+1)*width + (x+1));
 				imagenFiltro[indiceGray]=conv;
 				

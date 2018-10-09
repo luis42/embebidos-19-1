@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "imagen.h"
 #define DIMASK 3
 
@@ -18,7 +19,7 @@ int main()
 	bmpInfoHeader info;
 	unsigned char *imagenRGB,*imagenGray,*imagenFiltro;
 
-	imagenRGB = abrirBMP("huella1.bmp",&info);
+	imagenRGB = abrirBMP("calle1.bmp",&info);
 
 	displayInfo( &info);
 	imagenGray=RGBtoGray(imagenRGB ,info.width,info.height);
@@ -29,7 +30,7 @@ int main()
 	GraytoRGB(imagenFiltro , imagenRGB , info.width , info.height );
 	printf("Guardando\n");
 
-	guardarBMP("huella2.bmp", &info , imagenRGB);
+	guardarBMP("calle2.bmp", &info , imagenRGB);
 
 	free(imagenRGB);
 	free(imagenGray); 
@@ -45,16 +46,29 @@ void filtroImagen(unsigned char * imagenGray,unsigned char * imagenFiltro,uint32
 
 	register int y,x,ym,xm;
 
-	int indiceGray,conv,indicem;
-	unsigned char mascara[]={
-							1,1 ,1,
-							1,1 ,1,
-							1,1 ,1};
-	for (y = 0; y <= height-DIMASK ; y++)
+	int indiceGray,conv1,conv2,magnitud,indicem;
+/*	unsigned char mascara[]={
+							-1,-1 ,-1,
+							-1 ,8 ,-1,
+						-1 ,-1 ,-1};
+*/
+	char Gradf[]={
+							1, 0 ,-1,
+							2 ,0 ,-2,
+							1 ,0 ,-1};
+	char Gradc[]={
+							-1,-2 ,-1,
+							 0 ,0 , 0,
+							 1 ,2 , 1};
+
+	
+
+	for (y = 0; y < height-DIMASK ; y++)
 	{
-		for (x = 0; x <= width-DIMASK ; x++)
+		for (x = 0; x < width-DIMASK ; x++)
 		{
-			conv=0;
+			conv1=0;
+			conv2=0;
 			indicem=0;
 			for (ym= 0; ym < DIMASK; ym++)
 			{
@@ -62,13 +76,17 @@ void filtroImagen(unsigned char * imagenGray,unsigned char * imagenFiltro,uint32
 				for (xm = 0; xm < DIMASK; xm++)
 				{
 					indiceGray = ((y + ym) * width + (x + xm ));
-					conv+=imagenGray[indiceGray]*mascara[indicem++];
-
+					conv1+=imagenGray[indiceGray]*Gradf[indicem];
+					conv2+=imagenGray[indiceGray]*Gradc[indicem++];
+					
 				}
 			}
-				conv=conv/9;
+				conv1=conv1/4;
+				conv2=conv2/4;
+				
+				magnitud=sqrt(pow(conv1,2)+pow(conv2,2));
 				indiceGray=((y+1)*width + (x+1));
-				imagenFiltro[indiceGray]=conv;
+				imagenFiltro[indiceGray]=magnitud;
 				
 			
 			
