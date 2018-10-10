@@ -68,7 +68,7 @@ void filtroImagen(unsigned char * imagenGray,unsigned char * imagenFiltro,uint32
 
 				}
 			}
-				conv=conv/213;
+				conv=conv/273;
 				indiceGray=((y+2)*width + (x+2));
 				imagenFiltro[indiceGray]=conv;
 				
