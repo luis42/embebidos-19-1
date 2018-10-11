@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "imagen.h"
-#define DIMASK 5
+#define DIMASK 3
 
 
 unsigned char * RGBtoGray(unsigned char *imagenRGB,uint32_t width,uint32_t height);
@@ -46,12 +46,31 @@ void filtroImagen(unsigned char * imagenGray,unsigned char * imagenFiltro,uint32
 	register int y,x,ym,xm;
 
 	int indiceGray,conv,indicem;
+	// unsigned char mascara[]={
+	// 						1, 4, 7, 4, 1,
+	// 						4,16,26,16, 4,
+	// 						7,26,41,26, 7,
+	// 						4,16,26,16, 4,
+	// 						1, 4, 7, 4, 1};
+
+	/*unsigned char mascara[]={
+							2, 4, 5, 4, 2,
+							4, 9,12, 9, 4,
+							5,12,15,12, 5,
+							4, 9,12, 9, 4,
+							2, 4, 5, 4, 2};*/
+
+/*	unsigned char mascara[]={
+							1,2,1,
+							2,4,2,	
+							1,2,1};*/
 	unsigned char mascara[]={
-							1, 4, 7, 4, 1,
-							4,16,26,16, 4,
-							7,26,41,26, 7,
-							4,16,26,16, 4,
-							1, 4, 7, 4, 1};
+							1, 2, 3, 1, 1,
+							2, 7,11, 7, 2,
+							3,11,17,11, 3,
+							2, 7,11, 7, 1,
+							1, 2, 3, 2, 1};
+
 	for (y = 0; y <= height-DIMASK ; y++)
 	{
 		for (x = 0; x <= width-DIMASK ; x++)
@@ -68,8 +87,8 @@ void filtroImagen(unsigned char * imagenGray,unsigned char * imagenFiltro,uint32
 
 				}
 			}
-				conv=conv/213;
-				indiceGray=((y+2)*width + (x+2));
+				conv=conv/119;
+				indiceGray=((y+1)*width + (x+1));
 				imagenFiltro[indiceGray]=conv;
 				
 			
