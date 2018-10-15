@@ -19,7 +19,7 @@ int main(){
 	bmpInfoHeader info;
 	
 
-	imagenRGB = abrirBMP("calle1.bmp",&info);
+	imagenRGB = abrirBMP("huella1.bmp",&info);
 	width=info.width;
 	height=info.height;
 	printf("\t--------->%d\n",height);
@@ -79,7 +79,7 @@ int main(){
 
 
 	printf("Guardando\n");
-	guardarBMP("calle5.bmp", &info , imagenRGB);
+	guardarBMP("huella5.bmp", &info , imagenRGB);
 
 	free(imagenRGB);
 	free(imagenGray); 

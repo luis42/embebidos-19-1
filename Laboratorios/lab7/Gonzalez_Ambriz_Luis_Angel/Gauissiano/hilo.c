@@ -121,22 +121,17 @@ void * GraytoRGB(void *arg)
 void * filtroImagen(void *arg)
 {
 	int nh = *(int*) arg;
-	register int y,x,ym,xm;
+	register int x, y, xm, ym, indicem;
+	int conv, indice;
 
-	int indiceGray,conv1,conv2,magnitud,indicem;
-/*	unsigned char mascara[]={
-							-1,-1 ,-1,
-							-1 ,8 ,-1,
-						-1 ,-1 ,-1};
-*/
-	char Gradf[]={
-							1, 0 ,-1,
-							2 ,0 ,-2,
-							1 ,0 ,-1};
-	char Gradc[]={
-							-1,-2 ,-1,
-							 0 ,0 , 0,
-							 1 ,2 , 1};
+	//Se utiliza una máscara de 3x3. Hay que convolucionar los valores de la imagen con los valores de la máscara
+	//Utilizando el filtro Gaussiano
+	unsigned char mascara[] = 
+							{1,  4,  7,  4, 1,
+	 						 4, 16, 26, 16, 4,
+	 						 7, 26, 41, 26, 7,
+	 						 4, 16, 26, 16, 4,
+	 						 1,  4,  7,  4, 1,};
 
 	int tamBloque =height/NUM_HILOS;
 	int iniBloque = nh * tamBloque; 
@@ -145,33 +140,22 @@ void * filtroImagen(void *arg)
 	{
 	for (y = iniBloque; y < finBloque; y++)
 	{
-		for (x = 0; x < width-DIMASK ; x++)
-		{
-			conv1=0;
-			conv2=0;
-			indicem=0;
-			for (ym= 0; ym < DIMASK; ym++)
-			{
+		for(x = 0; x <= width-DIMASK; x++){ 
+			//Para recorrer la máscara
+			conv = 0;
+			indicem = 0;
 
-				for (xm = 0; xm < DIMASK; xm++)
-				{
-					indiceGray = ((y + ym) * width + (x + xm ));
-					conv1+=imagenGray[indiceGray]*Gradf[indicem];
-					conv2+=imagenGray[indiceGray]*Gradc[indicem++];
-					
+			for(ym = 0; ym < DIMASK; ym++){
+				for(xm = 0; xm < DIMASK; xm++){
+					indice = (y+ym)*width+(x+xm);
+					conv += imagenGray[indice] * mascara[indicem++];
 				}
 			}
-				conv1=conv1/4;
-				conv2=conv2/4;
-				
-				magnitud=sqrt(pow(conv1,2)+pow(conv2,2));
-				indiceGray=((y+1)*width + (x+1));
-				imagenFiltro[indiceGray]=magnitud;
-				// printf(">%d\n",conv1);
-				// printf(">>%d\n",conv2);
-				// printf(">>>%d\n",magnitud);
-			
-			
+
+			conv = conv / 273; //Coeficiente dado por el filtro Gaussiano
+			indice = ((y+1)*width + (x+1));
+			imagenFiltro[indice] = conv;
+
 		}
 	}
 	}
@@ -179,31 +163,22 @@ void * filtroImagen(void *arg)
 	{
 	for (y = iniBloque; y < finBloque-DIMASK; y++)
 		{
-		for (x = 0; x < width-DIMASK ; x++)
-		{
-			conv1=0;
-			conv2=0;
-			indicem=0;
-			for (ym= 0; ym < DIMASK; ym++)
-			{
+		for(x = 0; x <= width-DIMASK; x++){ 
+			//Para recorrer la máscara
+			conv = 0;
+			indicem = 0;
 
-				for (xm = 0; xm < DIMASK; xm++)
-				{
-					indiceGray = ((y + ym) * width + (x + xm ));
-					conv1+=imagenGray[indiceGray]*Gradf[indicem];
-					conv2+=imagenGray[indiceGray]*Gradc[indicem++];
-					
+			for(ym = 0; ym < DIMASK; ym++){
+				for(xm = 0; xm < DIMASK; xm++){
+					indice = (y+ym)*width+(x+xm);
+					conv += imagenGray[indice] * mascara[indicem++];
 				}
 			}
-				conv1=conv1/4;
-				conv2=conv2/4;
-				
-				magnitud=sqrt(pow(conv1,2)+pow(conv2,2));
-				indiceGray=((y+1)*width + (x+1));
-				imagenFiltro[indiceGray]=magnitud;
-				
-			
-			
+
+			conv = conv / 273; //Coeficiente dado por el filtro Gaussiano
+			indice = ((y+1)*width + (x+1));
+			imagenFiltro[indice] = conv;
+
 		}
 	}
 

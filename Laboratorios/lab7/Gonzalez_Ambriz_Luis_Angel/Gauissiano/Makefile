@@ -1,4 +1,4 @@
-archivos=calle5.bmp
+archivos=huella5.bmp
 PROYECTO=principal
 DESTDIR=/usr/local/bin
 CFLAGS=-Wall 
