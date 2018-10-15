@@ -18,7 +18,7 @@ int main()
 	bmpInfoHeader info;
 	unsigned char *imagenRGB,*imagenGray,*imagenFiltro;
 
-	imagenRGB = abrirBMP("calle1.bmp",&info);
+	imagenRGB = abrirBMP("huella1.bmp",&info);
 
 	displayInfo( &info);
 	imagenGray=RGBtoGray(imagenRGB ,info.width,info.height);
@@ -29,7 +29,7 @@ int main()
 	GraytoRGB(imagenFiltro , imagenRGB , info.width , info.height );
 	printf("Guardando\n");
 
-	guardarBMP("calle3.bmp", &info , imagenRGB);
+	guardarBMP("huella3.bmp", &info , imagenRGB);
 
 	free(imagenRGB);
 	free(imagenGray); 

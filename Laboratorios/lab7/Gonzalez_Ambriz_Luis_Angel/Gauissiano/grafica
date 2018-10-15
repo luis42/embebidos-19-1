@@ -1,0 +1,22 @@
+if (!exists("MP_LEFT"))   MP_LEFT = .1
+if (!exists("MP_RIGHT"))  MP_RIGHT = .95
+if (!exists("MP_BOTTOM")) MP_BOTTOM = .1
+if (!exists("MP_TOP"))    MP_TOP = .9
+if (!exists("MP_GAP"))    MP_GAP = 0.05
+
+set multiplot layout 2,2 columnsfirst title "{/:Bold=15 Embebidos}" \
+              margins screen MP_LEFT, MP_RIGHT, MP_BOTTOM, MP_TOP spacing screen MP_GAP
+
+set format y "%.1f"
+set key box opaque
+set xrange [0:600]
+
+
+plot ("seno.dat") lt 1 w l
+plot ("sample.dat") lt 2 w l
+
+plot ("hamming.dat") lt 4 w l
+set xlabel 'xlabel'
+pause mouse
+unset multiplot
+

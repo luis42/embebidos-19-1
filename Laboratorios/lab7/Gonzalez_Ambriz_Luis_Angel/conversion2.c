@@ -30,7 +30,7 @@ int main()
 	GraytoRGB(imagenFiltro , imagenRGB , info.width , info.height );
 	printf("Guardando\n");
 
-	guardarBMP("calle2.bmp", &info , imagenRGB);
+	guardarBMP("calle4.bmp", &info , imagenRGB);
 
 	free(imagenRGB);
 	free(imagenGray); 
@@ -87,6 +87,7 @@ void filtroImagen(unsigned char * imagenGray,unsigned char * imagenFiltro,uint32
 				magnitud=sqrt(pow(conv1,2)+pow(conv2,2));
 				indiceGray=((y+1)*width + (x+1));
 				imagenFiltro[indiceGray]=magnitud;
+				//printf("%d\n",magnitud);
 				
 			
 			
