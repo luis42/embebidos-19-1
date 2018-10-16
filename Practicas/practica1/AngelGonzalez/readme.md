@@ -8,7 +8,7 @@
 				Alumnos: 
 				          Angel Miranda Pedro.
 				          Gonzale Ambriz Luis Angel.
-				          
+
 				Materia:  Embedded Systems.
 		
 				Grupo:    4CM3.
@@ -18,7 +18,11 @@
 
 
 
+Raspbian
+Como podemos observar ya se tiene intalada en la raspberry un sistema como linux.
 
+
+'![GitHub Logo](imagenes/rasp.png)'
 
 
 
