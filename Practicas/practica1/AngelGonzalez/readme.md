@@ -7,10 +7,11 @@
 
 					 Alumnos: 
 				Angel Miranda Pedro.
-				Gonzale Ambris Luis Angel.
+				Gonzale Ambriz Luis Angel.
+
 				Materia:  Embedded Systems.
 		
-				Grupo: 4CM3.
+				Grupo:    4CM3.
 		
 				Profesor: García Ortega Víctor Hugo.
 
