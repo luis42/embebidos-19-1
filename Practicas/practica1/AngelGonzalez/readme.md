@@ -1,17 +1,17 @@
-# 	<h1>INSTITUTO POLITECNICO NACIONAL.</h1>
-#	ESCUELA SUPERIOR DE CÓMPUTO.<h2>
+ 			<h1>INSTITUTO POLITECNICO NACIONAL.</h1>
+#			ESCUELA SUPERIOR DE CÓMPUTO.<h2>
 
 
-# Título: Uso de las RaspberryPi 3.<h3>
+#		 Título: Uso de las RaspberryPi 3.<h3>
 
-			 Alumnos: 
-		Angel Miranda Pedro.
-		Gonzale Ambris Luis Angel.
-		Materia:  Embedded Systems.
-
-		Grupo: 4CM3.
-
-		Profesor: García Ortega Víctor Hugo.
+					 Alumnos: 
+				Angel Miranda Pedro.
+				Gonzale Ambris Luis Angel.
+				Materia:  Embedded Systems.
+		
+				Grupo: 4CM3.
+		
+				Profesor: García Ortega Víctor Hugo.
 
 
 
