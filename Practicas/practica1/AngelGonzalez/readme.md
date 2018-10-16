@@ -135,26 +135,42 @@ $sudo  systemctl  enable  vncserver-x11-serviced
 
 ```sh
 
-Instalamos vncserver en una ipad
+Instalamos vncserver en una Ipad
 
 ```
+
+Como podemos observar esta instalada en la Ipad
 
 ![GitHub Logo](imagenes/vnc.jpg)
 
 
+Ahora la ejecutamos y necesitamos poner la direccion ip antes ya obtenida.
+
 ![GitHub Logo](imagenes/vnc2.jpg)
 
+
+Llenamos los campos.
 
 ![GitHub Logo](imagenes/vnc3.jpg)
 
 
+Ahora ya solo es conectarnos y nos pedira la contraseña que pusimos al instalar
+
 ![GitHub Logo](imagenes/vnc4.jpg)
+
+Y ahora ya solo es conectarnos
 
 
 ![GitHub Logo](imagenes/vnc5.jpg)
 
 
- Usando  la  RaspberryPi  3  mediante  consola.
+Como podemos observar ya estamos conectados a la raspberry
+
+
+![GitHub Logo](imagenes/rasp.png)
+
+
+ Usando  la  RaspberryPi  3  mediante  consola con un fts232.
 
 ```sh
 
@@ -190,18 +206,25 @@ $ls  -l  /dev/ttyUSB0
 
 ```
 
-![GitHub Logo](imagenes/2018-10-15-092658_640x480_scrot.png)
+Como podemos observar ya tenemos el ttyUSB0 habilitado
+
+
+![GitHub Logo](imagenes/fts232 (1).png)
+
+
+![GitHub Logo](imagenes/fts2321.png)
 
 
 Verás  algo  como  esto:  “crw-rw----T  1  root  dialout  ...”,  la  letra  c  significa  que  es  un  dispositivode  carácter,  root  puede  leer  y  escribir,  el  grupo  dialout  puede  leer  y  escribir,  todos  los  demásno  tienen  acceso.  Debemos  ser  parte  del  grupo  dialout  para  poder  comunicarnos  con  elmódulo  FT232.
-$ id
+
 Si  no  aparece  el  grupo  dialout  en  la  lista  debemos  agregarnos  al  grupo  con:
 
 
 $  sudo  usermod  -a  -G  dialout  “$(whoami)”
 
 
-![GitHub Logo](imagenes/2018-10-15-092658_640x480_scrot.png)
+
+![GitHub Logo](imagenes/fts2322.png)
 
 
 Entonces  podemos  conectar  nuestra  computadora  personal  con  GNU  screen.  Screen  es  unprograma  que  permite  administrar  ventanas  multiplexando  una  terminal  física  entre  variosprocesos.  Con  screen  podemos  realizar  la  conexión  a  nuestra  tarjeta  Raspberry  usando  lacomunicación  UART.  La  conexión  la  realizamos  con  el  comando  screen  epecificando  eldispositivo  al  que  nos  vamos  a  conectar  y  la  velocidad  de  comunicación:
@@ -214,8 +237,6 @@ $screen  /dev/ttyUSB0  11520
 ```
 
 
-![GitHub Logo](imagenes/2018-10-15-092658_640x480_scrot.png)
-
 
 En  este  instante  tenemos  que  reniciar  nuestra  tarjeta  RaspberryPi  3.  
 ```sh
@@ -224,4 +245,12 @@ $sudo  reboot
 
 ```
 
+
+Como podemos observar ya estamos en la terminal de la raspberry
+
+![GitHub Logo](imagenes/ft232op.png)
+
+Y podemos visualizar el contenido.
+
+![GitHub Logo](imagenes/fts23210.png.png)
 
