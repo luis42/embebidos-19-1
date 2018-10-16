@@ -5,10 +5,10 @@
 
 #		 Título: Uso de las RaspberryPi 3.
 
-					 Alumnos: 
-				Angel Miranda Pedro.
-				Gonzale Ambriz Luis Angel.
-
+				Alumnos: 
+				          Angel Miranda Pedro.
+				          Gonzale Ambriz Luis Angel.
+				          
 				Materia:  Embedded Systems.
 		
 				Grupo:    4CM3.
