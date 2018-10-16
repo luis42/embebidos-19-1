@@ -86,12 +86,12 @@ $ifconfig
 
 Determinar  la  dirección  ipasignada  por  el  router  WIFI  a  la  tarjeta  RaspberryPi  3.
 
-Finalmente  ejecutar  la  conexión  con  el  comando  ssh.  Si  la  dirección  IP  asignada  a  nuestratarjeta  RaspberryPi  3  fuera 192.168.100.13 tendríamos:
+Finalmente  ejecutar  la  conexión  con  el  comando  ssh.  Si  la  dirección  IP  asignada  a  nuestratarjeta  RaspberryPi  3  fuera 192.168.100.32 tendríamos:
 
 
 ```sh
 
-$ssh pi@192.168.100.13
+$ssh pi@192.168.100.32
 
 ```
 
@@ -253,4 +253,18 @@ Como podemos observar ya estamos en la terminal de la raspberry
 Y podemos visualizar el contenido.
 
 ![GitHub Logo](imagenes/fts23210.png.png)
+
+
+
+
+
+## Autores ✒️
+
+* **Angel Miranda Pedro.** - *Documentación* - [peterwtf](https://github.com/peterwtf)
+* **Gonzale Ambriz Luis Angel.** - *Documentación* - [luis42](https://github.com/luis42)
+
+## Victor Hugo García Ortega 
+
+* **Profesor** [Victor Hugo García Ortega](https://github.com/vgarciaortega)
+
 
