@@ -260,8 +260,8 @@ Y podemos visualizar el contenido.
 
 ## Autores ✒️
 
-* **Angel Miranda Pedro.** - *Documentación* - [peterwtf](https://github.com/peterwtf)
-* **Gonzale Ambriz Luis Angel.** - *Documentación* - [luis42](https://github.com/luis42)
+* **Angel Miranda Pedro.** - *Reporte* - [peterwtf](https://github.com/peterwtf)
+* **Gonzale Ambriz Luis Angel.** - *Reporte* - [luis42](https://github.com/luis42)
 
 ## Victor Hugo García Ortega 
 
