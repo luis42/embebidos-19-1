@@ -14,6 +14,7 @@ int main(){
 
 	int nhs[NUM_HILOS], *res;
 	register int nh;
+	//creas 4 hilos por que estan asi en el def
 	pthread_t tids[NUM_HILOS];
 
 	bmpInfoHeader info;
@@ -24,27 +25,21 @@ int main(){
 	height=info.height;
 	printf("\t--------->%d\n",height);
 	displayInfo( &info);
-	//imagenGray=RGBtoGray(imagenRGB ,info.width,info.height);
-//	brilloImagen(imagenGray,info.width,info.height);
 	imagenFiltro=reservarMemoria(info.width,info.height);
 	imagenGray=reservarMemoria(info.width,info.height);
-//	filtroImagen(imagenGray,imagenFiltro,info.width,info.height);
-	
-//	GraytoRGB(imagenFiltro , imagenRGB , info.width , info.height );
 	
 
 
 	for (nh = 0; nh < NUM_HILOS; nh++)
 	{
 		nhs[nh] = nh;
-		//pthread_create(&tids[nh], NULL, funHilo, (void *)&nhs[nh]);
 		pthread_create(&tids[nh], NULL, RGBtoGray, (void *)&nhs[nh]);
 	}
 
 	for (nh = 0; nh < NUM_HILOS; nh++)
 	{
 		pthread_join(tids[nh], (void **)&res);
-		printf("Hilo %d terminado\n", *res);
+		printf("---->  Hilo %d terminado\n", *res);
 	}
 
 
@@ -52,14 +47,13 @@ int main(){
 	for (nh = 0; nh < NUM_HILOS; nh++)
 	{
 		nhs[nh] = nh;
-		//pthread_create(&tids[nh], NULL, funHilo, (void *)&nhs[nh]);
 		pthread_create(&tids[nh], NULL, filtroImagen, (void *)&nhs[nh]);
 	}
 
 	for (nh = 0; nh < NUM_HILOS; nh++)
 	{
 		pthread_join(tids[nh], (void **)&res);
-		printf("Hilo %d terminado\n", *res);
+		printf("---->  Hilo %d terminado\n", *res);
 	}
 	printf("Si hago filtroImagen\n");
 
@@ -74,11 +68,11 @@ int main(){
 	for (nh = 0; nh < NUM_HILOS; nh++)
 	{
 		pthread_join(tids[nh], (void **)&res);
-		printf("Hilo %d terminado\n", *res);
+		printf("---->  Hilo %d terminado\n", *res);
 	}
 
 
-	printf("Guardando\n");
+	printf("---->  Guardando\n");
 	guardarBMP("calle5.bmp", &info , imagenRGB);
 
 	free(imagenRGB);

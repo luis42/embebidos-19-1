@@ -190,4 +190,3 @@ void * filtroImagen(void *arg)
 
 
 }
-
