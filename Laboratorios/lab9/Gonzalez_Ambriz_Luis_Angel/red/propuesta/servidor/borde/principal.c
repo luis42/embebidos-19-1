@@ -9,18 +9,33 @@
 #include <libgen.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <signal.h>
+#include <ctype.h>
+#include <sys/wait.h>
 
 
 #include "datos.h"
 #include "hilo.h"
 #include "defs.h"
 #include "red.h"
+
+
+void ISRsw ( int sig );
+
 char *nombre_imagen_recibida;
 unsigned char *imagenRGB,*imagenGray,*imagenFiltro;
 uint32_t width;
 uint32_t height;
-int main(){
+int main()
+{
+  
+
+
+
   int sd;
+  pid_t  pid;
   struct sockaddr_in serverADDRESS;
   //struct hostent *hostINFO;
   FILE *f;
@@ -34,6 +49,12 @@ int main(){
   serverADDRESS.sin_family = AF_INET;
   serverADDRESS.sin_addr.s_addr = htonl(INADDR_ANY);
   serverADDRESS.sin_port = htons(PUERTO);
+  if(signal(SIGUSR1, ISRsw)== SIG_ERR)
+   	{
+   		perror("Error en la ISRsw\n");
+   		exit(EXIT_FAILURE);
+   	}
+
   if (bind(sd, (struct sockaddr *) &serverADDRESS, sizeof(serverADDRESS)) < 0)
   {
       printf("Cannot bind socket\n");
@@ -46,7 +67,12 @@ int main(){
   struct sockaddr_in clientADDRESS;
   int cd;
   clientADDRESSLENGTH = sizeof(clientADDRESS);
+  for(;EVER;)
+{
+printf("--->Inicializando servidor \n");
+
   cd = accept(sd, (struct sockaddr *) &clientADDRESS, &clientADDRESSLENGTH);
+  
   if (cd < 0) {
       printf("No fue posible aceptar la conexion\n");
       close(sd);
@@ -54,6 +80,10 @@ int main(){
   }//if   
   //recibir();
   //mandar(cd,f);
+  pid = fork();
+   	if(!pid)
+   	{
+
   f = fdopen(cd,"w+");
   recibir(cd,f);
   sleep(1);
@@ -164,8 +194,27 @@ int main(){
 	free(imagenFiltro);
 
   	close(sd);
-  	close(cd);
+  	kill ( getppid(),SIGUSR1);
+   	
+   	exit(0);
+  	
+  }
+  	
 
+}
+	close(cd);
 	return 0;
+}
+
+
+void ISRsw ( int sig )
+{
+	int estado;
+	pid_t pid;
+	if( sig== SIGUSR1)  //señal enviada desde el hijo..... 
+	{
+     wait ( & estado);
+     printf("USR1 recibida por el proceso %d\n", pid);
+	}
 }
 

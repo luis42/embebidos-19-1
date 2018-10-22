@@ -17,7 +17,7 @@ int main(int argc, char* argv[]){
     int cd;
     char *PUERTO="8000";
     
-    char* servidor="192.168.100.2";
+    char* servidor="127.0.0.1";
     FILE *f;  
 
     
