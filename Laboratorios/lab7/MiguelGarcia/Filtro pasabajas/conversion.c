@@ -15,7 +15,7 @@ int main()
 	bmpInfoHeader info;
 	unsigned char *imagenRGB , *imagenGray , *imagenFiltro;
 
-	imagenRGB = abrirBMP( "huella1.bmp" , &info );
+	imagenRGB = abrirBMP( "calle1.bmp" , &info );
 	displayInfo( &info );
 
 	printf("Abriendo imagen RGB\n");
@@ -23,11 +23,11 @@ int main()
 
 	//procesamiento
 	//brilloImagen( imagenGray , info.width , info.height );
-	imagenFiltro = resevarMemoria( info.width , info.height);
-	filtroImagen( imagenGray , imagenFiltro , info.width , info.height );
+	//imagenFiltro = resevarMemoria( info.width , info.height);
+	//filtroImagen( imagenGray , imagenFiltro , info.width , info.height );
 
-	GraytoRGB( imagenFiltro , imagenRGB , info.width , info.height );
-	guardarBMP( "huella1FPB.bmp" , &info , imagenRGB );
+	GraytoRGB( imagenGray , imagenRGB , info.width , info.height );
+	guardarBMP( "calle1FPB.bmp" , &info , imagenRGB );
 
 	free( imagenRGB );
 	free( imagenGray );

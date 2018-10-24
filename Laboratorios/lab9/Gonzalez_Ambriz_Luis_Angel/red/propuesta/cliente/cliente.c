@@ -17,7 +17,8 @@ int main(int argc, char* argv[]){
     int cd;
     char *PUERTO="51717";
     
-    char* servidor="127.0.0.1";
+    //char* servidor="127.0.0.1";
+    char* servidor="192.168.100.32";
     FILE *f;  
 
     
@@ -124,7 +125,7 @@ void mandar(int cd,FILE *f)
 
 
   f= fdopen(cd,"w+");     
-  char *arch1="DESCARGA.bmp";
+  char *arch1="calle1.bmp";
   char buffer[100];
   /*********/
   //char* local_file = "/foo/bar/baz.txt";
