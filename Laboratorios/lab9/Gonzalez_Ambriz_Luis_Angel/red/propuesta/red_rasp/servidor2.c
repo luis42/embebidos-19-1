@@ -8,15 +8,15 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-void error(const char *msg)
-{
-    perror(msg);
-    exit(1);
-}
+void recibe(int cd,FILE *f);
+void mandar(int cd,FILE *f);
+void error(const char *msg);
+
+
 
 int main(int argc, char *argv[])
 {
-    int sockfd, newsockfd, portno;
+    int sockfd, cd, portno;
     socklen_t clilen;
     char buffer[256];
     struct sockaddr_in serv_addr, cli_addr;
@@ -33,88 +33,105 @@ int main(int argc, char *argv[])
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = INADDR_ANY;
     serv_addr.sin_port = htons(portno);
-    if (bind(sockfd, (struct sockaddr *) &serv_addr,
-        sizeof(serv_addr)) < 0) 
+    if (bind(sockfd, (struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) 
         error("ERROR on binding");
     listen(sockfd,5);
     clilen = sizeof(cli_addr);
-    newsockfd = accept(sockfd, 
-                (struct sockaddr *) &cli_addr, 
-                &clilen);
-    if (newsockfd < 0) 
+    
+    cd = accept(sockfd,(struct sockaddr *) &cli_addr,&clilen);
+    
+    if (cd < 0) 
         error("ERROR on accept");
     bzero(buffer,256);
-   int valor=10;
-    //write(newsockfd,"1",18);
-    n = read(newsockfd,buffer,255);
-    printf("--->Recibiendo : %d \n ",n);
+    FILE *f = fdopen(cd,"w+");
+    recibe(cd,f);
+//    n = read(cd,buffer,255);
+//    write(cd,"1",18);
 
     if (n < 0)
         error("ERROR reading from socket");
     printf("Here is the message: %s\n",buffer);
-    write(newsockfd,"1",18);
-    //n = read(newsockfd,buffer,255);	
-
-n = read(newsockfd,buffer,255);
-printf("--->Recibiendo : %d \n ",n);
-
-printf("Here is the message: %s\n",buffer);
-write(newsockfd,"2",18);
-
-n = read(newsockfd,buffer,255);
-printf("--->Recibiendo : %d \n ",n);
-
-printf("Here is the message: %s\n",buffer);
-    write(newsockfd,"3",18);
-
-n = read(newsockfd,buffer,255);
-printf("--->Recibiendo : %d \n ",n);
-
-printf("Here is the message: %s\n",buffer);
-    write(newsockfd,"4",18);
-
-n = read(newsockfd,buffer,255);
-printf("--->Recibiendo : %d \n ",n);
-
-printf("Here is the message: %s\n",buffer);
-    write(newsockfd,"5",18);
-
-n = read(newsockfd,buffer,255);
-printf("--->Recibiendo : %d \n ",n);
-
-printf("Here is the message: %s\n",buffer);
-    write(newsockfd,"6",18);
-
-n = read(newsockfd,buffer,255);
-printf("--->Recibiendo : %d \n ",n);
-
-printf("Here is the message: %s\n",buffer);
-    write(newsockfd,"7",18);
-
-n = read(newsockfd,buffer,255);
-printf("--->Recibiendo : %d \n ",n);
-
-printf("Here is the message: %s\n",buffer);
-    write(newsockfd,"8",18);
-
-n = read(newsockfd,buffer,255);
-printf("--->Recibiendo : %d \n ",n);
-
-printf("Here is the message: %s\n",buffer);
-    write(newsockfd,"9",18);
-
-n = read(newsockfd,buffer,255);
-printf("--->Recibiendo : %d \n ",n);
-
-printf("Here is the message: %s\n",buffer);
-    write(newsockfd,"10",18);
 
 
 
 
     if (n < 0)
         error("ERROR writing to socket");
-    close(newsockfd);
+    close(cd);
     close(sockfd);
     return 0; 
+}
+
+
+
+
+
+void recibe(int cd,FILE *f)
+{
+    
+    printf("\n Conexion establecida.. enviando datos..\n");   
+    char nombre[100];
+    memset(nombre,0,sizeof (nombre));
+    int recibidos=0;
+    char ta[50];
+    memset(ta,0,sizeof(ta));
+    recibidos=read(cd,ta,sizeof(ta));
+    printf("ta vale : %s\n",ta);
+    if(recibidos<0)
+    {
+         perror("No se pudo leer el tamanio del archivo..");
+         exit(EXIT_FAILURE);
+    }//if
+    int ttt = strlen(ta);
+    printf("Se recibio cadena de %d bytes  %d\n",recibidos,ttt);
+    char *tok=strtok(ta,";");
+    char *tok1=strtok(NULL,";");
+    printf("\nt1: %s\n",tok);
+    printf("t1: %s\n",tok1);
+    long tam=atol(tok1);
+          // printf("\nTamanio del archivo: %d,  %s \n",taa,tok);
+    printf("Recibiendo archivo...\n");
+    int porcentaje=0;
+    long a=0;
+    char buffer[100];
+    char *ok="ok";
+    write(cd,ok,strlen(ok)+1);
+    f = fopen(tok, "w+");
+    printf("entro %d\n",cd);
+    if (f)//rt
+    { 
+
+        while(a<tam)
+        {
+            memset((char *)&buffer,0,sizeof(buffer));
+            int ll=read(cd,buffer,sizeof(buffer));
+            if(ll<0)
+            {
+               perror("No se pudieron leer los datos del archivo..");
+               exit(EXIT_FAILURE);
+            }//if
+            a = a + ll;
+            fwrite(buffer,1,ll,f);
+            fflush(f);
+            porcentaje =(int)((a*100)/tam);
+            printf("recibidos: %ld   tam: %ld  porcentaje: %d\r",a,tam,porcentaje);
+
+        }//while
+        
+        
+    }//fopen
+}
+
+
+
+
+
+
+
+
+
+void error(const char *msg)
+{
+    perror(msg);
+    exit(1);
 }

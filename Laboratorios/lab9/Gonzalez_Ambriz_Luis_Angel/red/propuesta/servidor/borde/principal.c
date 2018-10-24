@@ -23,6 +23,7 @@
 
 
 void ISRsw ( int sig );
+void error(const char *msg);
 
 char *nombre_imagen_recibida;
 unsigned char *imagenRGB,*imagenGray,*imagenFiltro;
@@ -31,51 +32,44 @@ uint32_t height;
 int main()
 {
   
-
-
-
-  int sd;
-  pid_t  pid;
-  struct sockaddr_in serverADDRESS;
-  //struct hostent *hostINFO;
-  FILE *f;
-  sd = socket(AF_INET, SOCK_STREAM, 0);
-  if (sd < 0)
-  {
-     printf("No fue posible crear el socket\n");
-     exit(EXIT_FAILURE);
-  }//if
-    //int op= setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &v, sizeof(v));
-  serverADDRESS.sin_family = AF_INET;
-  serverADDRESS.sin_addr.s_addr = htonl(INADDR_ANY);
-  serverADDRESS.sin_port = htons(PUERTO);
-  if(signal(SIGUSR1, ISRsw)== SIG_ERR)
+	if(signal(SIGUSR1, ISRsw)== SIG_ERR)
    	{
    		perror("Error en la ISRsw\n");
    		exit(EXIT_FAILURE);
    	}
 
-  if (bind(sd, (struct sockaddr *) &serverADDRESS, sizeof(serverADDRESS)) < 0)
-  {
-      printf("Cannot bind socket\n");
-      close(sd);
-      exit(EXIT_FAILURE);
-  }
 
-  listen(sd, 5);
-  socklen_t clientADDRESSLENGTH;
-  struct sockaddr_in clientADDRESS;
-  int cd;
-  clientADDRESSLENGTH = sizeof(clientADDRESS);
+ 
+ 	pid_t  pid;
+	int sockfd, cd, portno;
+    socklen_t clilen;
+    char buffer[256];
+    struct sockaddr_in serv_addr, cli_addr;
+    int n;
+
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd < 0) 
+        error("ERROR opening socket");
+    bzero((char *) &serv_addr, sizeof(serv_addr));
+        portno = 51717;
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_addr.s_addr = INADDR_ANY;
+    serv_addr.sin_port = htons(portno);
+    if (bind(sockfd, (struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) 
+        error("ERROR on binding");
+    listen(sockfd,5);
+    clilen = sizeof(cli_addr);
+
+
   for(;EVER;)
 {
 printf("--->Inicializando servidor \n");
 
-  cd = accept(sd, (struct sockaddr *) &clientADDRESS, &clientADDRESSLENGTH);
+  cd = accept(sockfd,(struct sockaddr *) &cli_addr,&clilen);
   
   if (cd < 0) {
       printf("No fue posible aceptar la conexion\n");
-      close(sd);
+      close(cd);
       exit(EXIT_FAILURE);
   }//if   
   //recibir();
@@ -84,7 +78,7 @@ printf("--->Inicializando servidor \n");
    	if(!pid)
    	{
 
-  f = fdopen(cd,"w+");
+  FILE *f = fdopen(cd,"w+");
   recibir(cd,f);
   sleep(1);
   //printf("\nIMAGEND recibida%s\n", nombre_imagen_recibida);
@@ -193,7 +187,7 @@ printf("--->Inicializando servidor \n");
 	free(imagenGray); 
 	free(imagenFiltro);
 
-  	close(sd);
+  	close(cd);
   	kill ( getppid(),SIGUSR1);
    	
    	exit(0);
@@ -202,7 +196,7 @@ printf("--->Inicializando servidor \n");
   	
 
 }
-	close(cd);
+	close(sockfd);
 	return 0;
 }
 
@@ -217,4 +211,11 @@ void ISRsw ( int sig )
      printf("USR1 recibida por el proceso %d\n", pid);
 	}
 }
+
+void error(const char *msg)
+{
+    perror(msg);
+    exit(1);
+}
+
 
