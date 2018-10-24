@@ -15,7 +15,7 @@ void mandar(int cd,FILE *f);
 
 int main(int argc, char* argv[]){
     int cd;
-    char *PUERTO="8000";
+    char *PUERTO="57717";
     
     char* servidor="127.0.0.1";
     FILE *f;  
