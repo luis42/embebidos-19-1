@@ -58,8 +58,5 @@ uninstall:
 clean:
 	rm -f *.o $(PROYECTO) 
 
-#action:
-#	echo $(argument)
-
 
 #compilar   make install argument="hojaGray.bmp"
