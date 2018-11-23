@@ -48,12 +48,25 @@ Termios se hace la configuración del UART
 #include <termios.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <string.h>
 
 #define N  1024
 #define EVER 1
 
-int config_serial ( char *, speed_t );
 
+
+int config_serial ( char *, speed_t );
+void imprimir(char *);
+char * limpiar_cadena(char *arreglo_dato);
+char validacion_de_datos(char *arreglo_dato);
+void obtenerdatos(char * arreglo_dato);
+
+
+char *latitud;
+char *norte;
+char *longitud;
+char *este;
+char *hora;
 int main()
 {
 	register int i;
@@ -63,12 +76,45 @@ int main()
 	fd_serie = config_serial( "/dev/ttyACM0", B9600 );
 	
 	printf("serial abierto con descriptor: %d\n", fd_serie);
-
+	int contador=0;
+	char *cadena;
+	cadena=limpiar_cadena(cadena);
 	//Leemos N datos del UART
 	for( ;EVER;)
 	{
 		read ( fd_serie, &dato, 1 );
-		printf("%c", dato);
+		
+		
+		//printf("%c", dato);
+		
+		if(dato == '\n')
+		{
+			char validando=' ';
+		 	contador=0;
+		 	printf("\n\n");
+		 	//imprimir(cadena);
+		 	validando=validacion_de_datos(cadena);
+		 	if(validando == '1')
+		 	{
+		 		
+		 		imprimir(cadena);
+		 		obtenerdatos(cadena);
+		 		
+		 	}
+		 	cadena=limpiar_cadena(cadena);
+		}
+		else 
+		{
+			//printf("%c",dato);
+			cadena[contador]=dato;
+			contador++;
+		}
+		/*
+		if(contador>9)
+		{
+			contador=0;
+		}
+		*/
 	}
 
 	close( fd_serie );
@@ -76,6 +122,117 @@ int main()
 	return 0;
 }
 
+
+
+
+void imprimir(char *arreglo_dato)
+{
+	int inicio=strlen(arreglo_dato),i;
+	
+	for (i = 0; i < inicio; i++)
+	{
+		printf("%c",arreglo_dato[i]);
+	}
+	printf("\n Finaliza lectura de datos\n");
+
+}
+
+
+
+char * limpiar_cadena(char *arreglo_dato)
+{
+	register int i=0;
+	for (i = 0; i < 200; i++)
+	{
+		arreglo_dato[i]='\0';
+	}
+	return arreglo_dato;
+
+}
+
+
+char validacion_de_datos(char *arreglo_dato)
+{
+
+	int inicio=strlen(arreglo_dato),i;
+	char validacion_dato[15];
+	strcpy(validacion_dato, "$GPGLL");
+	char validacion_a_enviar=' ';
+	int dato_guardado_para_partir=0;
+	int bandera=0;
+	for (int i = 0; i < inicio; i++)
+	{
+		
+		if(arreglo_dato[i] == ',' && bandera == 0)
+		{	
+			dato_guardado_para_partir=i;
+			bandera++;
+			int j=0;
+			int ret;
+			char datos_procesar[i];
+			for(j=0; j<i; j++)
+			{
+				datos_procesar[j]=arreglo_dato[j];
+
+			}
+			//printf("\n\ncadenas a comparar\n");
+			//printf("%s\n%s\n",validacion_dato,datos_procesar);
+
+			//printf("\n\n");
+			ret = strcmp(validacion_dato, datos_procesar);
+			if(ret == 0)
+			{
+				//printf("ya encontrmos a $GPGLL \n");
+				validacion_a_enviar='1';
+			}
+			else
+			{
+				//printf("aun no encontrmos a $GPGLL\n");
+				validacion_a_enviar='0';
+
+			}
+
+		 
+		}
+
+	}
+
+	return validacion_a_enviar;
+
+
+
+
+
+}
+
+void obtenerdatos(char * arreglo_dato)
+{
+
+
+
+	int inicio=strlen(arreglo_dato),i;
+	char validacion_dato[15];
+	char validacion_a_enviar=' ';
+	int dato_guardado_para_partir=0;
+	int bandera=0;
+	for (int i = 0; i < inicio; i++)
+	{
+		
+		if(arreglo_dato[i] == ',' && bandera == 0)
+		{	
+		
+			bandera++;
+		 
+		}
+		else
+		{
+			printf("empiezan da\n");
+			break;
+		}
+
+	}
+
+}
 /** @brief: Esta funcion Configura la interfaz serie
  *  @param: dispositivo_serial, Nombre el dispositivo serial a usar: ttyUSB0, ttyUSB1, etc
  *  @param: baudios, Velocidad de comunicacion. Se usa la constante Bxxxx, donde xxxx  es la
