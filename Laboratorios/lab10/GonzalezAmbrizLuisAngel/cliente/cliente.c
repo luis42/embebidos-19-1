@@ -38,14 +38,15 @@ int main(int argc, char* argv[]){
     freeaddrinfo(servinfo);
     
    
-    mandar(cd,argv[1]);
+    ///mandar(cd,argv[1]);
     
     recibe(cd);
+    
 
     
 
     printf("\n");
-    printf("--->Archivo recibidos \n");    
+   
     close(cd);
        
     
