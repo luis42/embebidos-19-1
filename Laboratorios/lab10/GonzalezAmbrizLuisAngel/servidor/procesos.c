@@ -217,6 +217,7 @@ void obtenerdatos(char * arreglo_dato)
 					hora[++contador_dato1]=segundo[1];
 					hora[++contador_dato1]=segundo[2];
 					hora[++contador_dato1]=espacio;
+					hora[++contador_dato1]='\0';
 					conversion[0]=hora[0];
 					conversion[1]=hora[1];
 					int num = atoi(conversion);

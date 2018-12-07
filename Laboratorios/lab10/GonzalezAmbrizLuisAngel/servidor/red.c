@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <termios.h>
 #include <fcntl.h>
+#include <string.h>
 
 #include "datos.h"
 #include "defs.h"
@@ -23,42 +24,52 @@
 extern char *latitud;
 extern char *longitud;
 extern char *hora;
-
+#define TAM_BUFFER 		100
 void mandar(int cd)
 {
-
-	int n;
-	
-
-	char buffer[100];
-	sprintf( buffer, "%s \n", latitud );
-	if ( (n = write( cd, buffer, strlen(buffer) ) ) < 0 )
-		perror( "ERROR writing to socket");
-	buffer[n] = '\0';
-
-
-	int n2;
-	
-
-	char buffer2[100];
+	char leer_mensaje[TAM_BUFFER];
+	if( write (cd, latitud, strlen(latitud)+1) < 0 )
+	{
+		perror("Ocurrio un problema en el envio de un mensaje al cliente");
+		exit(1);
+   	}
+   	if( read (cd, &leer_mensaje, TAM_BUFFER) < 0 )
+	{
+		perror ("Ocurrio algun problema al recibir datos del cliente");
+		exit(1);
+   	}
+   	printf ("El cliente nos envio el siguiente mensaje: \n %s \n", leer_mensaje);
 
 
-	sprintf( buffer2, "%s \n", longitud );
-	if ( (n2 = write( cd, buffer2, strlen(buffer2) ) ) < 0 )
-		perror( "ERROR writing to socket");
-	buffer2[n] = '\0';
 
 
-	int n3;
-	
+   	printf("Concluimos la ejecución de la aplicacion Servidor \n");
 
-	char buffer3[100];
-	sprintf( buffer3, "%s \n", hora );
-	if ( (n3 = write( cd, buffer3, strlen(buffer3) ) ) < 0 )
-		perror( "ERROR writing to socket");
-	buffer3[n] = '\0';
-	printf("saliendo\n");
-	close(cd);
+   	if( write (cd, longitud, strlen(longitud)+1) < 0 )
+	{
+		perror("Ocurrio un problema en el envio de un mensaje al cliente");
+		exit(1);
+   	}
+   	if( read (cd, &leer_mensaje, TAM_BUFFER) < 0 )
+	{
+		perror ("Ocurrio algun problema al recibir datos del cliente");
+		exit(1);
+   	}
+   	printf ("El cliente nos envio el siguiente mensaje: \n %s \n", leer_mensaje);
+   	printf("Concluimos la ejecución de la aplicacion Servidor \n");
+
+   	if( write (cd, hora, strlen(hora)) < 0 )
+	{
+		perror("Ocurrio un problema en el envio de un mensaje al cliente");
+		exit(1);
+   	}
+   	if( read (cd, &leer_mensaje, TAM_BUFFER) < 0 )
+	{
+		perror ("Ocurrio algun problema al recibir datos del cliente");
+		exit(1);
+   	}
+   	printf ("El cliente nos envio el siguiente mensaje: \n %s \n", leer_mensaje);
+   	printf("Concluimos la ejecución de la aplicacion Servidor \n");
 }
 
 

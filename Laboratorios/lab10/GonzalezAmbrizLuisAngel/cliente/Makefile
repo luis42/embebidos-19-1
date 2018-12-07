@@ -1,7 +1,7 @@
 
-PROYECTO=principal
+PROYECTO=clienteTCP
 DESTDIR=/usr/local/bin
-CFLAGS=#-Wall 
+CFLAGS=-Wall 
 LDFLAGS=-lm -lpthread
 CC=gcc
 argu=""

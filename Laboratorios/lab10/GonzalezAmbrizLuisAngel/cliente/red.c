@@ -8,110 +8,71 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdlib.h>
-
-void recibe(int cd)
-{
-    
-    printf("\n Conexion establecida.. enviando datos..\n");   
-    int i=0;
-    while(i<3)
-    {
-    char nombre[100];
-    memset(nombre,0,sizeof (nombre));
-    int recibidos=0;
-    char ta[100];
-    memset(ta,0,sizeof(ta));
-    
-    recibidos=read(cd,ta,sizeof(ta));
-    printf("\n-> %s\n",ta);
-    if(recibidos<0)
-    {
-         perror("No se pudo leer el tamanio del archivo..\n");
-         exit(EXIT_FAILURE);
-    }//if
-    printf("\n");
-    i++;
-  }
+#include <termios.h>
+#include <fcntl.h>
+#include <string.h>
 
 
-    
-}
 
-void mandar(int cd,char *imagen)
+
+
+
+
+extern char *latitud;
+extern char *longitud;
+extern char *hora;
+#define TAM_BUFFER  2000
+void mandar(int cd)
 {
 
+	syslog(LOG_INFO, "\nEnviando\n");
+	syslog(LOG_INFO, "%s\n",latitud);
+	syslog(LOG_INFO, "%s\n",longitud);
+	syslog(LOG_INFO, "%s\n",hora);
+	char leer_mensaje[TAM_BUFFER];
+	if( write (cd, latitud, strlen(latitud)) < 0 )
+	{
+		syslog(LOG_INFO, "Ocurrio un problema en el envio de un mensaje al cliente");
+		exit(1);
+   	}
+   	if( read (cd, &leer_mensaje, TAM_BUFFER) < 0 )
+	{
+		
+		syslog(LOG_INFO, "Ocurrio algun problema al recibir datos del cliente");
+		exit(1);
+   	}
+   	syslog(LOG_INFO, "El cliente nos envio el siguiente mensaje: \n %s \n", leer_mensaje);
+   	
+   	syslog(LOG_INFO, "Concluimos la ejecución de la aplicacion Servidor \n");
 
-  
 
+   	if( write (cd, longitud, strlen(longitud)) < 0 )
+	{
+		syslog(LOG_INFO, "Ocurrio un problema en el envio de un mensaje al cliente");
+		exit(1);
+   	}
+   	if( read (cd, &leer_mensaje, TAM_BUFFER) < 0 )
+	{
+		syslog(LOG_INFO, "Ocurrio algun problema al recibir datos del cliente");
+		exit(1);
+   	}
+   	syslog(LOG_INFO, "El cliente nos envio el siguiente mensaje: \n %s \n", leer_mensaje);
+   	
+   	syslog(LOG_INFO, "Concluimos la ejecución de la aplicacion Servidor \n");
 
-      
-  char *arch1=imagen;
-  char buffer[100];
-  /*********/
-  //char* local_file = "/foo/bar/baz.txt";
-
-
-  char* ts2 = strdup(arch1);
-
-
-  char* nombre = basename(ts2);
-  /********/
-  memset((char *)&buffer,0,sizeof(buffer));
-  
-  FILE *f = fopen(arch1, "r+");
-        if (f)//rt
-        {   //fread
-            int prev=ftell(f);//medimos el tamaño del archivo
-            fseek(f,0L,SEEK_END);
-            long sz = (long)ftell(f);
-            fseek(f,prev,SEEK_SET);
-            printf("El archivo a leer mide %ld bytes\n",sz);
-
-            char msj[50];
-            memset(&msj,0,sizeof(msj));
-            sprintf(msj,"%s;%ld",nombre,sz);
-            int enviados=write(cd,msj,strlen(msj)+1);
-            fflush(f);
-            //printf("Presiona enter para continuar...\n");
-            //getchar();
-            printf("Se escribio %s \n",msj);
-            
-            if(enviados<0)
-            {
-              perror("No se pudo mandar el tamanio del archivo..");
-              exit(EXIT_FAILURE);
-            }
-            
-            //printf("Se envio cadena de %d bytes\n",enviados);
-            int l;
-            char ok[3];
-            bzero(ok, sizeof(ok));
-            int n=read(cd, ok, sizeof(ok));
-            printf("%d\n",n);
-            long leidos=0;
-            while(leidos<sz)
-            {
-                memset((char *)&buffer,0,sizeof(buffer));
-                l=fread(buffer, 1, sizeof(buffer), f);
-                leidos = leidos + l;
-                int es=write(cd,buffer,l);
-                
-                if(es<0)
-                {
-                    perror("No se pudo mandar el buffer de datos");
-                    close(cd);
-                    exit(EXIT_FAILURE);
-                }//if
-                
-                fflush(f);
-            }//while
-            sleep(1);
-            
-        }//if fread
-      fclose(f);
-      printf("Archivo enviado.. \n");
-      
-      
-          
-
+   	if( write (cd, hora, strlen(hora)) < 0 )
+	{
+		syslog(LOG_INFO, "Ocurrio un problema en el envio de un mensaje al cliente");
+		exit(1);
+   	}
+   	if( read (cd, &leer_mensaje, TAM_BUFFER) < 0 )
+	{
+		syslog(LOG_INFO, "Ocurrio algun problema al recibir datos del cliente");
+		exit(1);
+   	}
+    syslog(LOG_INFO, "El cliente nos envio el siguiente mensaje: \n %s \n", leer_mensaje);
+   	
+   	syslog(LOG_INFO, "Concluimos la ejecución de la aplicacion Servidor \n");
 }
+
+

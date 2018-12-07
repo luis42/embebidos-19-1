@@ -5,16 +5,19 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <string.h>
 
-#define PUERTO 51717
-#define TAM_BUFFER 57717
-#define DIR_IP "127.0.0.1"
+#define PUERTO 51718
+#define TAM_BUFFER 200
+#define DIR_IP "192.168.100.32"
+char leer_mensaje[TAM_BUFFER];
 
+void limpiar_cadena();
 int main(int argc, char **argv)
 {
-	int tamano_direccion, sockfd;
+	int sockfd;
 	struct sockaddr_in direccion_servidor;
-	char leer_mensaje[TAM_BUFFER];
+	
 /*	
  *	AF_INET - Protocolo de internet IPV4
  *  htons - El ordenamiento de bytes en la red es siempre big-endian, por lo que
@@ -55,38 +58,44 @@ int main(int argc, char **argv)
 /*
  *	Inicia la transferencia de datos entre cliente y servidor
  */
-
+	limpiar_cadena();
 	printf ("Recibiendo datos de servidor ...\n");
 	if (read (sockfd, &leer_mensaje, TAM_BUFFER) < 0)
 	{	
 		perror ("Ocurrio algun problema al recibir datos del cliente");
 		exit(1);
 	}
-	printf ("\tEl servidor envio latitud  ---->>:   %s\n", leer_mensaje);
+	printf ("\tEl servidor envio latitud   ---->>:   %s\n", leer_mensaje);
 	
 	if( write(sockfd, "ok", 3) < 0 )
 	{
 		perror("Ocurrio un problema en el envio de un mensaje al cliente");
 		exit(1);
 	}
+
+	limpiar_cadena();
+	
 	if (read (sockfd, &leer_mensaje, TAM_BUFFER) < 0)
 	{	
 		perror ("Ocurrio algun problema al recibir datos del cliente");
 		exit(1);
 	}
-	printf ("\tEl servidor envio  longitud  ---->>:   %s\n", leer_mensaje);
+	printf ("\tEl servidor envio  longitud ---->>:   %s\n", leer_mensaje);
 	
 	if( write(sockfd, "ok", 3) < 0 )
 	{
 		perror("Ocurrio un problema en el envio de un mensaje al cliente");
 		exit(1);
 	}
+	
+	limpiar_cadena();
+
 	if (read (sockfd, &leer_mensaje, TAM_BUFFER) < 0)
 	{	
 		perror ("Ocurrio algun problema al recibir datos del cliente");
 		exit(1);
 	}
-	printf ("\tEl servidor envio  la hora  ---->>:   %s\n", leer_mensaje);
+	printf ("\tEl servidor envio  la hora  ---->>:   %s \n", leer_mensaje);
 	if( write(sockfd, "ok", 3) < 0 )
 	{
 		perror("Ocurrio un problema en el envio de un mensaje al cliente");
@@ -103,3 +112,15 @@ int main(int argc, char **argv)
 	return 0;
 }
 	
+
+
+
+void limpiar_cadena()
+{
+	register int i=0;
+	for (i = 0; i < TAM_BUFFER; i++)
+	{
+		leer_mensaje[i]='\0';
+	}
+
+}

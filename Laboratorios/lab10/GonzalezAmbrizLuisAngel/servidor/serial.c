@@ -125,8 +125,8 @@ printf("--->Inicializando servidor \n");
    	{
 
   	mandar(cd);
+  	
   	close(sockfd);
-  	close(cd);
 
   	kill ( getppid(),SIGUSR1);
    	
@@ -134,12 +134,12 @@ printf("--->Inicializando servidor \n");
   	
   }
   	
-
+  
 }
-	;
+	
 
 
-
+	close(cd);
 	return 0;
 }
 
@@ -179,7 +179,7 @@ void posicion()
 	unsigned char dato;
 	fd_serie = config_serial( "/dev/ttyACM0", B9600 );
 	
-	printf("serial abierto con descriptor: %d\n", fd_serie);
+	//printf("serial abierto con descriptor: %d\n", fd_serie);
 	int contador=0;
 	char *cadena;
 	cadena=limpiar_cadena(cadena);
@@ -228,8 +228,9 @@ void posicion()
 		}
 		*/
 	}
-
+	sleep(1);
 	close( fd_serie );
+	sleep(1);
 }
 
 

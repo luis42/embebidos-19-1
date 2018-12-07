@@ -1,5 +1,5 @@
 archivos=calle5.bmp
-PROYECTO=principal
+PROYECTO=serial
 DESTDIR=/usr/local/bin
 CFLAGS=-Wall 
 LDFLAGS=-lm -lpthread
