@@ -10,7 +10,7 @@ s = socket.socket()
 #Nos conectamos al servidor con el metodo connect. Tiene dos parametros
 #El primero es la IP del servidor y el segundo el puerto de conexion
 
-s.connect(("192.168.100.32", 51718))
+s.connect(("192.168.100.38", 51718))
 print "\nRecibiendo datos de Servidor\n\n"
 data=s.recv(1024)
 

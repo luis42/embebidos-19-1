@@ -9,7 +9,7 @@
 
 #define PUERTO 51718
 #define TAM_BUFFER 200
-#define DIR_IP "192.168.100.32"
+#define DIR_IP "192.168.100.38"
 char leer_mensaje[TAM_BUFFER];
 
 void limpiar_cadena();
